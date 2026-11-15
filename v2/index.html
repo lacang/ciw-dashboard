@@ -23,7 +23,7 @@
 import {define} from "./_observablehq/client.bb2095eb.js";
 import {registerFile} from "./_observablehq/stdlib.099e91c9.js";
 
-registerFile("./data/picks.json", {"name":"./data/picks.json","mimeType":"application/json","path":"./_file/data/picks.99fd47b8.json","lastModified":1794780215979,"size":3114});
+registerFile("./data/picks.json", {"name":"./data/picks.json","mimeType":"application/json","path":"./_file/data/picks.a67afdc2.json","lastModified":1794780275764,"size":3064});
 
 define({id: "25cd5ee3", inputs: ["FileAttachment"], outputs: ["Inputs","data","picks","meta","tracks"], body: async (FileAttachment) => {
 const Inputs = await import("./_observablehq/stdlib/inputs.45f26fa5.js");
@@ -32,13 +32,6 @@ const picks = data.picks;
 const meta = data.meta;
 const tracks = data.tracks;
 return {Inputs,data,picks,meta,tracks};
-}});
-
-define({id: "acd99783", inputs: ["view","Inputs","tracks","picks"], outputs: ["trackSel"], body: (view,Inputs,tracks,picks) => {
-const trackSel = view(Inputs.radio(
-  ["全部", ...tracks.filter(t => picks.some(p => p.track === t))],
-  {label: null, value: "全部"}));
-return {trackSel};
 }});
 
 define({id: "24e35056", inputs: ["meta","display","html","picks"], outputs: ["mins","stale"], body: (meta,display,html,picks) => {
@@ -51,6 +44,13 @@ display(html`<h1>今天能拍这 ${picks.length} 条</h1>
   <span>· ${meta.platforms.length} 个平台 ${meta.keywords} 个话题</span>
 </div>`);
 return {mins,stale};
+}});
+
+define({id: "acd99783", inputs: ["view","Inputs","tracks","picks"], outputs: ["trackSel"], body: (view,Inputs,tracks,picks) => {
+const trackSel = view(Inputs.radio(
+  ["全部", ...tracks.filter(t => picks.some(p => p.track === t))],
+  {label: null, value: "全部"}));
+return {trackSel};
 }});
 
 define({id: "49c4fa6e", inputs: ["trackSel","picks","html","display"], body: (trackSel,picks,html,display) => {
@@ -90,8 +90,8 @@ return {basis};
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
 <div class="observablehq observablehq--block"><!--:25cd5ee3:--></div>
-<div class="observablehq observablehq--block"><!--:acd99783:--></div>
 <div class="observablehq observablehq--block"><!--:24e35056:--></div>
+<div class="observablehq observablehq--block"><!--:acd99783:--></div>
 <div class="observablehq observablehq--block"><!--:49c4fa6e:--></div>
 <h2 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#">依据</a></h2>
 <div class="observablehq observablehq--block"><!--:a894be30:--></div>
