@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="generator" content="Observable Framework v1.13.4">
 <title>历史回看 | 今天拍什么</title>
-<link rel="preload" as="style" href="./_import/style.f898edd6.css">
-<link rel="stylesheet" type="text/css" href="./_import/style.f898edd6.css">
-<link rel="modulepreload" href="./_observablehq/client.54070e64.js">
+<link rel="preload" as="style" href="./_import/style.8869bfd0.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.8869bfd0.css">
+<link rel="modulepreload" href="./_observablehq/client.bb2095eb.js">
 <link rel="modulepreload" href="./_observablehq/runtime.13bc3751.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.099e91c9.js">
 <link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
@@ -16,13 +16,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <script type="module">
 
-import {define} from "./_observablehq/client.54070e64.js";
+import {define} from "./_observablehq/client.bb2095eb.js";
 import {registerFile} from "./_observablehq/stdlib.099e91c9.js";
 
-registerFile("./data/history.json", {"name":"./data/history.json","mimeType":"application/json","path":"./_file/data/history.b574cee5.json","lastModified":1794779607798,"size":3550});
+registerFile("./data/history.json", {"name":"./data/history.json","mimeType":"application/json","path":"./_file/data/history.b7386b39.json","lastModified":1794780064092,"size":5351});
 
-define({id: "95cb6c3b", inputs: ["FileAttachment"], outputs: ["hist","slots","cur","prev","newSet"], body: (FileAttachment) => {
-const hist = FileAttachment("./data/history.json").json();
+define({id: "e00f571e", inputs: ["FileAttachment"], outputs: ["hist","slots","cur","prev","newSet"], body: async (FileAttachment) => {
+const hist = await FileAttachment("./data/history.json").json();
 const slots = hist.history;
 const cur = slots[slots.length - 1] ?? null;
 const prev = slots[slots.length - 2] ?? null;
@@ -30,9 +30,9 @@ const newSet = new Set(cur?.new ?? []);
 return {hist,slots,cur,prev,newSet};
 }});
 
-define({id: "4eba403a", inputs: ["display","html","slots"], body: (display,html,slots) => {
+define({id: "3c3d5368", inputs: ["display","html","slots"], body: (display,html,slots) => {
 display(html`<p class="status" style="margin-top:0">
-  <span class="dot"></span><span>${slots.length} 个切片 · 过去 24 小时每 2 小时一个 · 来自 trends 表 2 分钟粒度原始记录</span>
+  <span class="dot"></span><span>${slots.length} 个切片 · 覆盖最近 ${slots[slots.length - 1]?.span_hours ?? 0} 小时 · 每 2 小时一个 · 来自 trends 表 2 分钟粒度原始记录</span>
 </p>`);
 }});
 
@@ -81,9 +81,9 @@ display(html`<div class="nav"><a href="./">← 回今天</a><a href="../legacy.h
 <body>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:95cb6c3b:--></div>
+<div class="observablehq observablehq--block"><!--:e00f571e:--></div>
 <h1 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#">历史回看</a></h1>
-<div class="observablehq observablehq--block"><!--:4eba403a:--></div>
+<div class="observablehq observablehq--block"><!--:3c3d5368:--></div>
 <h2 id="vs-2" tabindex="-1"><a class="observablehq-header-anchor" href="#vs-2">这次 vs 上次（2 小时前）</a></h2>
 <div class="observablehq observablehq--block"><!--:d95db0c1:--></div>
 <h2 id="-1" tabindex="-1"><a class="observablehq-header-anchor" href="#-1">时间线</a></h2>
