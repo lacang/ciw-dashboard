@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>历史回看 | 今天拍什么</title>
+<link rel="preload" as="style" href="./_import/style.f898edd6.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.f898edd6.css">
+<link rel="modulepreload" href="./_observablehq/client.54070e64.js">
+<link rel="modulepreload" href="./_observablehq/runtime.13bc3751.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.099e91c9.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="module">
+
+import {define} from "./_observablehq/client.54070e64.js";
+import {registerFile} from "./_observablehq/stdlib.099e91c9.js";
+
+registerFile("./data/history.json", {"name":"./data/history.json","mimeType":"application/json","path":"./_file/data/history.b574cee5.json","lastModified":1794779607798,"size":3550});
+
+define({id: "95cb6c3b", inputs: ["FileAttachment"], outputs: ["hist","slots","cur","prev","newSet"], body: (FileAttachment) => {
+const hist = FileAttachment("./data/history.json").json();
+const slots = hist.history;
+const cur = slots[slots.length - 1] ?? null;
+const prev = slots[slots.length - 2] ?? null;
+const newSet = new Set(cur?.new ?? []);
+return {hist,slots,cur,prev,newSet};
+}});
+
+define({id: "4eba403a", inputs: ["display","html","slots"], body: (display,html,slots) => {
+display(html`<p class="status" style="margin-top:0">
+  <span class="dot"></span><span>${slots.length} 个切片 · 过去 24 小时每 2 小时一个 · 来自 trends 表 2 分钟粒度原始记录</span>
+</p>`);
+}});
+
+define({id: "d95db0c1", inputs: ["prev","cur","display","html"], body: (prev,cur,display,html) => {
+{
+  if (!prev || !cur) { display(html`<p>历史还不够长，再跑几轮就有了。</p>`); }
+  else {
+    const prevTitles = new Set(prev.top.map(t => t.title));
+    const curTitles = new Set(cur.top.map(t => t.title));
+    const inflow = cur.top.filter(t => !prevTitles.has(t.title));
+    const outflow = prev.top.filter(t => !curTitles.has(t.title));
+    display(html`<div class="card" style="border-left-color:var(--ok)">
+      <div class="why" style="margin-top:0"><b>新进榜</b>：${inflow.length ? inflow.map(t => t.title).join("、") : "无（头部很稳）"}</div>
+      <div class="why"><b>掉出榜</b>：${outflow.length ? outflow.map(t => t.title).join("、") : "无"}</div>
+    </div>`);
+  }
+}
+}});
+
+define({id: "323d7378", inputs: ["display","html","slots","newSet"], body: (display,html,slots,newSet) => {
+display(html`<div>${slots.slice().reverse().map((s, i, arr) => html`
+  <div class="slot${i === 0 ? " now" : ""}">
+    <div class="at">${s.label}${i === 0 ? " · 现在" : ""}</div>
+    <ol>${s.top.map(t => html`<li>${t.title}<span class="tag">${t.track}</span>${newSet.has(t.title) && i === 0 ? html`<span class="tag new">新</span>` : ""}</li>`)}</ol>
+  </div>`)}</div>`);
+}});
+
+define({id: "2911a529", inputs: ["hist","display","html"], body: (hist,display,html) => {
+{
+  const ls = hist.last_seen;
+  if (!ls) { display(html`<p class="why">还没有上一次记录。这一版是起点，下次构建会把今天的结论存下来做对比。</p>`); }
+  else {
+    display(html`<div class="card"><div class="why" style="margin-top:0">
+      <b>${ls.at.slice(0, 16).replace("T", " ")}</b> 那次的头部结论：
+      ${ls.picks.slice(0, 5).map(p => p.title).join("、")}</div></div>`);
+  }
+}
+}});
+
+define({id: "cc0722a2", inputs: ["display","html"], body: (display,html) => {
+display(html`<div class="nav"><a href="./">← 回今天</a><a href="../legacy.html">完整看板（旧版）</a></div>`);
+}});
+
+</script>
+</head>
+<body>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:95cb6c3b:--></div>
+<h1 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#">历史回看</a></h1>
+<div class="observablehq observablehq--block"><!--:4eba403a:--></div>
+<h2 id="vs-2" tabindex="-1"><a class="observablehq-header-anchor" href="#vs-2">这次 vs 上次（2 小时前）</a></h2>
+<div class="observablehq observablehq--block"><!--:d95db0c1:--></div>
+<h2 id="-1" tabindex="-1"><a class="observablehq-header-anchor" href="#-1">时间线</a></h2>
+<div class="observablehq observablehq--block"><!--:323d7378:--></div>
+<h2 id="-2" tabindex="-1"><a class="observablehq-header-anchor" href="#-2">上次你看到的样子</a></h2>
+<div class="observablehq observablehq--block"><!--:2911a529:--></div>
+<div class="observablehq observablehq--block"><!--:cc0722a2:--></div>
+</main>
+<footer id="observablehq-footer">
+<div>数据来自工作站 SQLite（trends / low_fan_hits），构建时直连数据库，页面纯静态。</div>
+</footer>
+</div>
+</body>
+</html>
