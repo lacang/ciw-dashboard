@@ -5,34 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="generator" content="Observable Framework v1.13.4">
 <title>今天拍什么</title>
-<link rel="preload" as="style" href="./_import/style.f898edd6.css">
-<link rel="stylesheet" type="text/css" href="./_import/style.f898edd6.css">
-<link rel="modulepreload" href="./_observablehq/client.54070e64.js">
+<link rel="preload" as="style" href="./_import/style.8869bfd0.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.8869bfd0.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="modulepreload" href="./_observablehq/client.bb2095eb.js">
 <link rel="modulepreload" href="./_observablehq/runtime.13bc3751.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.099e91c9.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.45f26fa5.js">
 <link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/604cb63b.js">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1220">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <script type="module">
 
-import {define} from "./_observablehq/client.54070e64.js";
+import {define} from "./_observablehq/client.bb2095eb.js";
 import {registerFile} from "./_observablehq/stdlib.099e91c9.js";
 
-registerFile("./data/picks.json", {"name":"./data/picks.json","mimeType":"application/json","path":"./_file/data/picks.9e2f8391.json","lastModified":1794779607797,"size":3297});
+registerFile("./data/picks.json", {"name":"./data/picks.json","mimeType":"application/json","path":"./_file/data/picks.d6ba7c58.json","lastModified":1794780064091,"size":3114});
 
-define({id: "50a66d8b", inputs: ["FileAttachment"], outputs: ["Mutable","data","picks","meta","tracks"], body: async (FileAttachment) => {
-const {Mutable} = await import("./_observablehq/stdlib.099e91c9.js");
-const data = FileAttachment("./data/picks.json").json();
+define({id: "25cd5ee3", inputs: ["FileAttachment"], outputs: ["Inputs","data","picks","meta","tracks"], body: async (FileAttachment) => {
+const Inputs = await import("./_observablehq/stdlib/inputs.45f26fa5.js");
+const data = await FileAttachment("./data/picks.json").json();
 const picks = data.picks;
 const meta = data.meta;
 const tracks = data.tracks;
-return {Mutable,data,picks,meta,tracks};
+return {Inputs,data,picks,meta,tracks};
 }});
 
-define({id: "a06cde45", inputs: ["Mutable"], outputs: ["active"], body: (Mutable) => {
-const active = Mutable("全部");
-return {active};
+define({id: "acd99783", inputs: ["view","Inputs","tracks","picks"], outputs: ["trackSel"], body: (view,Inputs,tracks,picks) => {
+const trackSel = view(Inputs.radio(
+  ["全部", ...tracks.filter(t => picks.some(p => p.track === t))],
+  {label: null, value: "全部"}));
+return {trackSel};
 }});
 
 define({id: "24e35056", inputs: ["meta","display","html","picks"], outputs: ["mins","stale"], body: (meta,display,html,picks) => {
@@ -47,9 +53,9 @@ display(html`<h1>今天能拍这 ${picks.length} 条</h1>
 return {mins,stale};
 }});
 
-define({id: "14ca77ec", inputs: ["active","picks","html","display","tracks"], body: (active,picks,html,display,tracks) => {
+define({id: "49c4fa6e", inputs: ["trackSel","picks","html","display"], body: (trackSel,picks,html,display) => {
 {
-  const sel = active;
+  const sel = trackSel;
   const shown = picks.filter(p => sel === "全部" || p.track === sel);
   const card = p => html`<article class="card${p.kind === "爆款格式" ? " viral" : ""}">
   <details>
@@ -62,9 +68,7 @@ define({id: "14ca77ec", inputs: ["active","picks","html","display","tracks"], bo
     </div>
   </details>
 </article>`;
-  display(html`<div class="chips">${["全部", ...tracks.filter(t => picks.some(p => p.track === t))]
-    .map(t => html`<button class="chip${t === sel ? " on" : ""}" onclick=${() => active.value = t}>${t}</button>`)}</div>
-  <div class="cards">${shown.map(card)}</div>
+  display(html`<div class="cards">${shown.map(card)}</div>
   <div class="nav"><a href="history.html">历史回看 →</a><a href="../legacy.html">完整看板（旧版）</a><a href="../">爆款雷达</a></div>`);
 }
 }});
@@ -85,10 +89,10 @@ return {basis};
 <body>
 <div id="observablehq-center">
 <main id="observablehq-main" class="observablehq">
-<div class="observablehq observablehq--block"><!--:50a66d8b:--></div>
-<div class="observablehq observablehq--block"><!--:a06cde45:--></div>
+<div class="observablehq observablehq--block"><!--:25cd5ee3:--></div>
+<div class="observablehq observablehq--block"><!--:acd99783:--></div>
 <div class="observablehq observablehq--block"><!--:24e35056:--></div>
-<div class="observablehq observablehq--block"><!--:14ca77ec:--></div>
+<div class="observablehq observablehq--block"><!--:49c4fa6e:--></div>
 <h2 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#">依据</a></h2>
 <div class="observablehq observablehq--block"><!--:a894be30:--></div>
 <p>一句为什么，都来自数据库实数：跨平台在榜 → 话题自带流量且不违规；2 小时内新上榜 → 现在拍还赶得上；低粉高倍 → 形式被验证过，跟人设无关的部分可以照搬。</p>
