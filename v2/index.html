@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>今天拍什么</title>
+<link rel="preload" as="style" href="./_import/style.f898edd6.css">
+<link rel="stylesheet" type="text/css" href="./_import/style.f898edd6.css">
+<link rel="modulepreload" href="./_observablehq/client.54070e64.js">
+<link rel="modulepreload" href="./_observablehq/runtime.13bc3751.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.099e91c9.js">
+<link rel="modulepreload" href="./_npm/htl@1.0.0/11521f02.js">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="module">
+
+import {define} from "./_observablehq/client.54070e64.js";
+import {registerFile} from "./_observablehq/stdlib.099e91c9.js";
+
+registerFile("./data/picks.json", {"name":"./data/picks.json","mimeType":"application/json","path":"./_file/data/picks.9e2f8391.json","lastModified":1794779607797,"size":3297});
+
+define({id: "50a66d8b", inputs: ["FileAttachment"], outputs: ["Mutable","data","picks","meta","tracks"], body: async (FileAttachment) => {
+const {Mutable} = await import("./_observablehq/stdlib.099e91c9.js");
+const data = FileAttachment("./data/picks.json").json();
+const picks = data.picks;
+const meta = data.meta;
+const tracks = data.tracks;
+return {Mutable,data,picks,meta,tracks};
+}});
+
+define({id: "a06cde45", inputs: ["Mutable"], outputs: ["active"], body: (Mutable) => {
+const active = Mutable("全部");
+return {active};
+}});
+
+define({id: "24e35056", inputs: ["meta","display","html","picks"], outputs: ["mins","stale"], body: (meta,display,html,picks) => {
+const mins = meta.data_ago_min;
+const stale = mins > 40;
+display(html`<h1>今天能拍这 ${picks.length} 条</h1>
+<div class="status">
+  <span class="dot ${stale ? "stale" : ""}"></span>
+  <span>数据 ${meta.data_time.slice(11, 16)}${stale ? `（${mins} 分钟前，采集可能停了）` : `（${mins} 分钟前）`}</span>
+  <span>· ${meta.platforms.length} 个平台 ${meta.keywords} 个话题</span>
+</div>`);
+return {mins,stale};
+}});
+
+define({id: "14ca77ec", inputs: ["active","picks","html","display","tracks"], body: (active,picks,html,display,tracks) => {
+{
+  const sel = active;
+  const shown = picks.filter(p => sel === "全部" || p.track === sel);
+  const card = p => html`<article class="card${p.kind === "爆款格式" ? " viral" : ""}">
+  <details>
+    <summary>
+      <div class="top"><span class="num">${p.rank}</span><span class="title">${p.title}</span></div>
+      <div class="why">${p.why}</div>
+    </summary>
+    <div class="action">怎么拍：${p.action}
+      <br><span class="hint">${p.track} · ${p.kind} · 评分 ${p.score}</span>
+    </div>
+  </details>
+</article>`;
+  display(html`<div class="chips">${["全部", ...tracks.filter(t => picks.some(p => p.track === t))]
+    .map(t => html`<button class="chip${t === sel ? " on" : ""}" onclick=${() => active.value = t}>${t}</button>`)}</div>
+  <div class="cards">${shown.map(card)}</div>
+  <div class="nav"><a href="history.html">历史回看 →</a><a href="../legacy.html">完整看板（旧版）</a><a href="../">爆款雷达</a></div>`);
+}
+}});
+
+define({id: "a894be30", inputs: ["picks","display","html"], outputs: ["basis"], body: (picks,display,html) => {
+const basis = picks.filter(p => p.kind === "热点").map(p => Object.assign({}, p, {
+  plats: p.platforms.map(x => `${x.p} ${x.rank}`).join(" · ")
+}));
+display(html`<div class="table"><table>
+<thead><tr><th>话题</th><th>名次</th><th>赛道</th></tr></thead>
+<tbody>${basis.map(p => html`<tr><td>${p.title}</td><td>${p.plats}</td><td>${p.track}</td></tr>`)}</tbody>
+</table></div>`);
+return {basis};
+}});
+
+</script>
+</head>
+<body>
+<div id="observablehq-center">
+<main id="observablehq-main" class="observablehq">
+<div class="observablehq observablehq--block"><!--:50a66d8b:--></div>
+<div class="observablehq observablehq--block"><!--:a06cde45:--></div>
+<div class="observablehq observablehq--block"><!--:24e35056:--></div>
+<div class="observablehq observablehq--block"><!--:14ca77ec:--></div>
+<h2 id="" tabindex="-1"><a class="observablehq-header-anchor" href="#">依据</a></h2>
+<div class="observablehq observablehq--block"><!--:a894be30:--></div>
+<p>一句为什么，都来自数据库实数：跨平台在榜 → 话题自带流量且不违规；2 小时内新上榜 → 现在拍还赶得上；低粉高倍 → 形式被验证过，跟人设无关的部分可以照搬。</p>
+</main>
+<footer id="observablehq-footer">
+<div>数据来自工作站 SQLite（trends / low_fan_hits），构建时直连数据库，页面纯静态。</div>
+</footer>
+</div>
+</body>
+</html>
