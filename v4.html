@@ -1,0 +1,935 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name=color-scheme content="dark">
+<title>选题雷达 v4 · 2026-11-16</title><style>
+:root{--bg:#0d1015;--fg:#e9ecf1;--dim:#97a0ad;--line:#222833;--card:#161b22;--hi:#ffd166;
+ --acc:#7cc4ff;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--fg);
+ font:15px/1.42 -apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:8px 11px 30px}
+header{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:2px 0 6px}
+h1{margin:0;font-size:17px;letter-spacing:.4px}
+.meta{color:var(--dim);font-size:11px}
+.today{background:linear-gradient(180deg,#1a1f28,#151a21);border:1px solid #2b3341;border-radius:12px;padding:8px 9px 6px;margin:0 0 8px}
+.today h2{margin:0 0 6px;font-size:12px;color:var(--hi);font-weight:600;display:flex;justify-content:space-between}
+.today h2 span{color:var(--dim);font-weight:400;font-size:10.5px}
+.titem{display:block;text-decoration:none;color:inherit;padding:5px 6px;border-radius:8px;margin-bottom:3px;background:#1d232c}
+.titem:last-child{margin-bottom:0}
+.trow{display:flex;align-items:center;gap:6px}
+.tk{flex:0 0 auto;font-size:10px;color:#0d1015;background:var(--acc);border-radius:4px;padding:1px 5px;font-weight:600}
+.tt{flex:1;min-width:0;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tg{flex:0 0 auto;font-size:10px;border-radius:4px;padding:1px 5px}
+.tg.t1{color:var(--ok);border:1px solid #1e4d33}.tg.t2{color:var(--warn);border:1px solid #4d3a13}
+.tg.t3{color:var(--bad);border:1px solid #4d1f1f}
+.tm{color:var(--dim);font-size:10.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto;background:#1a2029;color:#c3cbd7;border:1px solid var(--line);border-radius:999px;
+ padding:5px 11px;font-size:12.5px;font-family:inherit}
+nav.tabs button.on{background:var(--hi);color:#151a21;border-color:var(--hi);font-weight:600}
+section.track{display:none}
+section.track.on{display:block}
+h3{font-size:12.5px;margin:10px 0 5px;color:var(--hi);font-weight:600;display:flex;gap:6px;align-items:baseline}
+h3 small{color:var(--dim);font-weight:400;font-size:10.5px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:0 0 6px;padding:7px 9px}
+.card .l1{font-size:13.5px;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .l2{color:var(--dim);font-size:10.5px;margin-top:3px}
+.card .l3{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.card .l3 i{font-style:normal;font-size:10.5px;color:#cfd6e2;background:#20262f;border-radius:4px;padding:1px 5px}
+.judge{display:flex;gap:6px;margin-top:5px;font-size:11.5px;line-height:1.4;align-items:flex-start}
+.judge b{flex:0 0 auto;border-radius:4px;padding:1px 5px;font-size:10.5px;font-weight:600}
+.judge.t1 b{color:var(--ok);background:#14261c;border:1px solid #1e4d33}
+.judge.t2 b{color:var(--warn);background:#241c0c;border:1px solid #4d3a13}
+.judge.t3 b{color:var(--bad);background:#241416;border:1px solid #4d1f1f}
+.judge span{color:#c7cedb}
+.card a.go{display:inline-block;margin-top:5px;font-size:11px;color:var(--acc);text-decoration:none}
+.empty{color:var(--dim);font-size:12px;background:#141920;border:1px dashed #2a3240;border-radius:8px;padding:8px 9px;margin:0 0 6px}
+.topic{font-size:11.5px;color:#c7cedb;padding:4px 0;border-bottom:1px dashed #232a35}
+.topic:last-child{border:0}
+.topic em{font-style:normal;color:var(--hi)}
+footer{margin-top:14px;padding-top:9px;border-top:1px solid var(--line);font-size:11px;color:var(--dim);line-height:1.7}
+details.rules{margin-top:8px;font-size:11.5px;color:#c7cedb}
+details.rules summary{color:var(--acc);font-size:12px;cursor:pointer}
+details.rules p,details.rules li{line-height:1.55;margin:4px 0}
+details.rules table{width:100%;border-collapse:collapse;font-size:11px;margin:4px 0}
+details.rules td,details.rules th{border-bottom:1px solid var(--line);padding:2px 4px;text-align:left}
+a{color:var(--acc)}
+.topnav{display:flex;gap:6px;font-size:11.5px;padding:0 0 6px}
+.topnav a,.topnav b{flex:1;text-align:center;text-decoration:none;padding:4px 0;border-radius:7px;
+ background:#161b22;border:1px solid var(--line);font-weight:400;color:#b9c1cd}
+.topnav b{background:#232a35;color:var(--hi);border-color:#3a3320;font-weight:600}
+</style></head><body><div class=wrap>
+<header><h1>选题雷达 v4</h1><span class=meta>11-16 · 06:16 更新 · 16 赛道</span></header>
+<div class=topnav><a href="index.html">低粉爆款雷达</a><b>分赛道选题</b><a href="legacy.html">旧版看板</a></div>
+<div class=today>
+  <h2>今天建议拍的 3 条 <span>一个人能拍 · 转发率优先 · 不同赛道</span></h2>
+  <a class=titem href="https://www.douyin.com/video/7707510725153222114" target=_blank rel=noopener>
+  <div class=trow><span class=tk>科技</span><span class=tt>这个阿姨真持家，回家还要拖个洗衣机，值得我们学习😃</span>
+   <span class="tg t1">一个人能拍</span></div>
+  <div class=tm>@野隅自安 · 1305粉 · 360万播放 · 转发率 595.4% · 11-13 12:38</div>
+</a><a class=titem href="https://www.douyin.com/video/7702836327754509426" target=_blank rel=noopener>
+  <div class=trow><span class=tk>知识</span><span class=tt>鲸鱼的声音为什么传得很远？</span>
+   <span class="tg t1">一个人能拍</span></div>
+  <div class=tm>@牛顿顿顿顿牛 · 1285粉 · 191万播放 · 转发率 489.2% · 10-31 22:19</div>
+</a><a class=titem href="https://www.douyin.com/video/7707944694798405979" target=_blank rel=noopener>
+  <div class=trow><span class=tk>健康</span><span class=tt>如果不爱了十一年跟一天有什么区别</span>
+   <span class="tg t1">一个人能拍</span></div>
+  <div class=tm>@Bury · 1430粉 · 172万播放 · 转发率 391.9% · 11-14 16:42</div>
+</a>
+</div>
+<nav class=tabs><button data-t="情感" class="on">情感</button><button data-t="职场" class="">职场</button><button data-t="生活" class="">生活</button><button data-t="健康" class="">健康</button><button data-t="科技" class="">科技</button><button data-t="游戏" class="">游戏</button><button data-t="体育" class="">体育</button><button data-t="娱乐" class="">娱乐</button><button data-t="知识" class="">知识</button><button data-t="母婴" class="">母婴</button><button data-t="宠物" class="">宠物</button><button data-t="美食" class="">美食</button><button data-t="旅游" class="">旅游</button><button data-t="教育" class="">教育</button><button data-t="财经" class="">财经</button><button data-t="其他" class="">其他</button></nav>
+<section class=track data-t="情感"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 18 条（标签 18 / 关键词补 0），达标 0 条</small></h3><div class=card>
+  <div class=l1>我爱上一个人会对这个人带有母性的成瘾付出 我不想让他受到半分委屈和伤害 你热吗 你冷吗 不要生病呀 想为他添置点他想要的需要的 不要怕对我开口呀 我一定会尽力做到的 要天上的星星我……版本过低，升级后可展示全部信息</div>
+  <div class=l2>Yen · 11-12 15:45 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 1356</i><i>播放 131万</i><i>转发率 7.7%</i><i>爆 965.9x</i><i>备选 · 倍数 966x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播</span></div>
+  <a class=go href="https://www.douyin.com/video/7707187894364492008" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>打碎对爱的纯真幻想，好好爱自己一次。说了1万遍讨厌你，第1万零一遍还是最喜欢你</div>
+  <div class=l2>沐谨之. · 11-13 20:06 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 1390</i><i>播放 133万</i><i>转发率 13.8%</i><i>爆 958.5x</i><i>备选 · 倍数 959x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播</span></div>
+  <a class=go href="https://www.douyin.com/video/7707626401126156479" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>我还爱你 但我们不会再见了</div>
+  <div class=l2>秋. · 11-10 22:43 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 1483</i><i>播放 136万</i><i>转发率 26.5%</i><i>爆 918.0x</i><i>备选 · 倍数 918x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7706553606190954939" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 21 条</small></h3><div class=card>
+  <div class=l1>关于爱情，我终于想明白了几件事 爱情可以被解释，但永远无法被解释完。 经历过一些感情以后，我依然说不清爱情到底是什么。但关于独立、空间、付出、沟通、吸引力，以及如何面对外界的意见，有6件事情我终于比以前明白了一点。 这期视频不是教大家怎么谈恋爱，只是想分享这些年我在感情里的一些经历和思考。 也许爱情本来就不是拿来搞懂的，而是拿来经历的。 🎵：The David Roy Collective - Our Time</div>
+  <div class=l2>Michael大麦哥 · 10-19 07:00 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 937万</i><i>播放 357万</i><i>转发率 45.7%</i><i>爆 0.4x</i><i>2190秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 2190 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播</span></div>
+  <a class=go href="https://www.douyin.com/video/7697926023714737408" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>「随机游走下的重逢」:走散的人，还能再相见吗？</div>
+  <div class=l2>GGBond的小课堂 · 11-13 13:01 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 112万</i><i>播放 257万</i><i>转发率 46.2%</i><i>爆 2.3x</i><i>98秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播</span></div>
+  <a class=go href="https://www.douyin.com/video/7707505705380629800" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>热爱生活的人，不管和谁一起过日子，都是好日子</div>
+  <div class=l2>京城赵四秀 · 11-14 12:01 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 834万</i><i>播放 177万</i><i>转发率 41.4%</i><i>爆 0.2x</i><i>114秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需第二人及以上出镜（标题含“母女”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707872391677906210" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>（只有话题 #心理测试题）</div>
+  <div class=l2>珉天见. · 11-14 16:33 发布 · 平台垂类标签：情感</div>
+  <div class=l3"><i>粉丝 676</i><i>播放 87万</i><i>转发率 63.6%</i><i>爆 1287.3x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人自述/口播；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707942570865530618" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>相亲相爱一家人哈哈哈哈哈哈哈哈哈哈</div>
+  <div class=l2>关二静 · 11-14 12:14 发布 · 关键词归类（相亲）</div>
+  <div class=l3"><i>粉丝 638万</i><i>播放 1257万</i><i>转发率 104.9%</i><i>爆 2.0x</i><i>101秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需第二人及以上出镜（标题含“一家”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707875828465499042" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>“由大师来给你把个脉”</div>
+  <div class=l2>期 遇 · 11-14 11:14 发布 · 关键词归类（爱情）</div>
+  <div class=l3"><i>粉丝 106万</i><i>播放 435万</i><i>转发率 498.8%</i><i>爆 4.1x</i><i>16秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 16 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707860388491617640" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="职场"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 20 条（标签 19 / 关键词补 1），达标 1 条</small></h3><div class=card>
+  <div class=l1>不要小看我们的羁绊！</div>
+  <div class=l2>锦福小剧场 · 11-05 19:20 发布 · 关键词归类（老板）</div>
+  <div class=l3"><i>粉丝 1417</i><i>播放 486万</i><i>转发率 拿不到</i><i>爆 3431.5x</i><i>41秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需 AI/数字人工具（标题含“AI”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7704645850895777531" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>流量激励 看到流量激励说明要动起来了</div>
+  <div class=l2>航航讲大白话｜ip打造 · 11-08 20:13 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 1687</i><i>播放 121万</i><i>转发率 25.6%</i><i>爆 719.9x</i><i>28秒</i><i>备选 · 倍数 720x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历；注意：只有话题标签没有文案，实际内容需点开确认；时长 28 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7705772742918403449" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>一场残酷模拟面试，告诉你为什么有些大学生毕业就失业</div>
+  <div class=l2>左哥聊求职 · 11-13 17:00 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 1884</i><i>播放 124万</i><i>转发率 162.9%</i><i>爆 656.5x</i><i>134秒</i><i>备选 · 倍数 657x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历</span></div>
+  <a class=go href="https://www.douyin.com/video/7707560661978647862" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 20 条</small></h3><div class=card>
+  <div class=l1>真相往往不在问题里，而在问题背后的沉默中</div>
+  <div class=l2>关少 · 11-13 21:06 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 89万</i><i>播放 105万</i><i>转发率 50.1%</i><i>爆 1.2x</i><i>396秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 396 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历</span></div>
+  <a class=go href="https://www.douyin.com/video/7707641657264508169" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>不做无准备之求，不说无台阶之话</div>
+  <div class=l2>关少 · 11-07 21:00 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 89万</i><i>播放 81万</i><i>转发率 63.0%</i><i>爆 0.9x</i><i>546秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 546 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历</span></div>
+  <a class=go href="https://www.douyin.com/video/7705413555482299682" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>上班的顶级心法</div>
+  <div class=l2>无所吊谓大师 · 11-12 20:58 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 132万</i><i>播放 67万</i><i>转发率 149.8%</i><i>爆 0.5x</i><i>14秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历；注意：只有话题标签没有文案，实际内容需点开确认；时长 14 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707268518354344164" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>经济周期六大规律，藏着普通人的机会！</div>
+  <div class=l2>悠悠小虾 · 11-14 10:44 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 13万</i><i>播放 214万</i><i>转发率 41.0%</i><i>爆 15.9x</i><i>22秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历；时长 22 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707852557028783465" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>越走越宽</div>
+  <div class=l2>双生花 · 11-14 07:44 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 53万</i><i>转发率 26.6%</i><i>爆 18.1x</i><i>68秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707806059905268081" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>富爸爸思维之买东西的逻辑</div>
+  <div class=l2>时代-AIGC · 11-12 19:20 发布 · 平台垂类标签：职场</div>
+  <div class=l3"><i>粉丝 2万</i><i>播放 208万</i><i>转发率 27.1%</i><i>爆 116.0x</i><i>16秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜讲经历；注意：只有话题标签没有文案，实际内容需点开确认；时长 16 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707243358229450025" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="生活"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 153 条（标签 148 / 关键词补 5），达标 38 条</small></h3><div class=card>
+  <div class=l1>原视频</div>
+  <div class=l2>感觉至上. · 11-13 21:00 发布 · 平台垂类标签：随拍</div>
+  <div class=l3"><i>粉丝 1045</i><i>播放 732万</i><i>转发率 112.9%</i><i>爆 7000.3x</i><i>44秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单机位随手拍；时长 44 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707640246935124800" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>万事 尽其心尽其力 而后 顺其自然</div>
+  <div class=l2>也许 · 11-12 14:31 发布 · 平台垂类标签：颜值</div>
+  <div class=l3"><i>粉丝 1247</i><i>播放 801万</i><i>转发率 294.2%</i><i>爆 6420.2x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707168763707743141" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #从两轮到四轮）</div>
+  <div class=l2>王逗逗 · 10-30 12:46 发布 · 平台垂类标签：汽车</div>
+  <div class=l3"><i>粉丝 4852</i><i>播放 2590万</i><i>转发率 117.0%</i><i>爆 5338.1x</i><i>12秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 12 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7702317624197353442" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 149 条</small></h3><div class=card>
+  <div class=l1>这么久了 你还是逃不过覆面系.</div>
+  <div class=l2>建鹏🇨🇳 · 11-10 19:54 发布 · 平台垂类标签：随拍</div>
+  <div class=l3"><i>粉丝 480万</i><i>播放 2207万</i><i>转发率 20.0%</i><i>爆 4.6x</i><i>12秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单机位随手拍；时长 12 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706509875039865562" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>《第201单:这是我看过最特别的一场“见面”…》</div>
+  <div class=l2>热月是我！ · 11-13 17:00 发布 · 平台垂类标签：生活记录</div>
+  <div class=l3"><i>粉丝 878万</i><i>播放 1538万</i><i>转发率 20.8%</i><i>爆 1.8x</i><i>433秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>需专业资质/机构场景（标题含“消防”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707497039923252489" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>半天只卖一单的炸鸡你知道为啥吗</div>
+  <div class=l2>老鹏友 · 11-13 17:30 发布 · 平台垂类标签：生活记录</div>
+  <div class=l3"><i>粉丝 53万</i><i>播放 1298万</i><i>转发率 39.7%</i><i>爆 24.5x</i><i>141秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人日常记录；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707511410036623226" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>兜兜转转还是你</div>
+  <div class=l2>耐摔王 · 11-14 18:43 发布 · 平台垂类标签：随拍</div>
+  <div class=l3"><i>粉丝 1375</i><i>播放 105万</i><i>转发率 439.1%</i><i>爆 763.8x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单机位随手拍；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707975954271278266" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>什么也没有</div>
+  <div class=l2>77893醉德 · 11-14 17:41 发布 · 平台垂类标签：三农</div>
+  <div class=l3"><i>粉丝 71万</i><i>播放 834万</i><i>转发率 72.1%</i><i>爆 11.8x</i><i>50秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 50 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707960118810657637" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>烟盒不要丢！@ 朋友来爆改古风聚宝葫芦.</div>
+  <div class=l2>小鹏. · 11-14 17:00 发布 · 平台垂类标签：生活家居</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 461万</i><i>转发率 67.2%</i><i>爆 134.6x</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需才艺/手工展示（标题含“手工”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707949401125294715" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="健康"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 18 条（标签 18 / 关键词补 0），达标 3 条</small></h3><div class=card>
+  <div class=l1>你俩就不能消停点吗？</div>
+  <div class=l2>衡阳石鼓妇女儿童医院-四维日记 · 11-13 21:25 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 2375</i><i>播放 565万</i><i>转发率 172.3%</i><i>爆 2377.1x</i><i>11秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“宝宝”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707646604405415802" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>陪护果然是累啊，不陪护我爸估计已经出院了</div>
+  <div class=l2>富婆 · 11-10 13:09 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 4664</i><i>播放 881万</i><i>转发率 40.2%</i><i>爆 1889.8x</i><i>10秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）；时长 10 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706405601518309055" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>如果不爱了十一年跟一天有什么区别</div>
+  <div class=l2>Bury · 11-14 16:42 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 1430</i><i>播放 172万</i><i>转发率 391.9%</i><i>爆 1200.4x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707944694798405979" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 16 条</small></h3><div class=card>
+  <div class=l1>一点都不疼</div>
+  <div class=l2>一凡. · 11-14 16:46 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 194万</i><i>播放 481万</i><i>转发率 69.0%</i><i>爆 2.5x</i><i>6秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）；注意：只有话题标签没有文案，实际内容需点开确认；时长 6 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707945926757370698" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>从窝沟封闭上，感受到了社会信息的参差</div>
+  <div class=l2>次元管家喵帕斯 · 11-13 18:31 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 43万</i><i>播放 483万</i><i>转发率 68.1%</i><i>爆 11.3x</i><i>33秒</i><i>备选 · 粉丝 43万，未达 50万</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）；时长 33 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707601746591255858" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>剖腹产伤口一旦出现脂肪液化，产妇究竟有多遭罪？ AI制作</div>
+  <div class=l2>医史溯源 · 11-13 20:21 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 37万</i><i>播放 455万</i><i>转发率 120.2%</i><i>爆 12.3x</i><i>200秒</i><i>备选 · 粉丝 37万，未达 50万</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需 AI/数字人工具（标题含“AI”）；成片 200 秒，单人需备稿+较多剪辑</span></div>
+  <a class=go href="https://www.douyin.com/video/7707630180902194441" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>（只有话题 #门诊）</div>
+  <div class=l2>丁一郎医生 · 11-14 19:50 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 6万</i><i>播放 120万</i><i>转发率 879.9%</i><i>爆 19.5x</i><i>21秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>需专业资质/机构场景（标题含“门诊”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707582016925043977" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>在男男中，那种角色更容易感染 HIV？</div>
+  <div class=l2>郭金存医生 · 11-14 11:37 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 4万</i><i>播放 140万</i><i>转发率 345.0%</i><i>爆 34.3x</i><i>205秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 205 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707835340569108671" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>17岁确诊无精症的第一天</div>
+  <div class=l2>君临天下只为一人 · 11-14 10:34 发布 · 平台垂类标签：医疗健康</div>
+  <div class=l3"><i>粉丝 262</i><i>播放 277万</i><i>转发率 48.2%</i><i>爆 10571.7x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人科普（不涉及诊疗场景）；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707849901527601786" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="科技"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 32 条（标签 32 / 关键词补 0），达标 2 条</small></h3><div class=card>
+  <div class=l1>这个阿姨真持家，回家还要拖个洗衣机，值得我们学习😃</div>
+  <div class=l2>野隅自安 · 11-13 12:38 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 1305</i><i>播放 360万</i><i>转发率 595.4%</i><i>爆 2759.2x</i><i>7秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 7 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707510725153222114" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>我在网上9块9买的验钞机，怎么有毛病了？</div>
+  <div class=l2>俊宇和验钞机生活（已放假） · 11-08 10:45 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 1665</i><i>播放 359万</i><i>转发率 74.0%</i><i>爆 2154.3x</i><i>9秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 9 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7705626351257260251" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>到底是谁干的</div>
+  <div class=l2>南柯学长 · 11-11 17:09 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 1165</i><i>播放 88万</i><i>转发率 442.0%</i><i>爆 751.7x</i><i>5秒</i><i>备选 · 倍数 752x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 5 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706838463043888986" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 36 条</small></h3><div class=card>
+  <div class=l1>人生第一次现场看火箭发射和回收 就遇到爆炸</div>
+  <div class=l2>老A · 11-14 08:07 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 173万</i><i>播放 3217万</i><i>转发率 25.3%</i><i>爆 18.6x</i><i>24秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需特定场景/外出（标题含“现场”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707811998869023654" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>所有人都用这个备忘录出神图！！！</div>
+  <div class=l2>娱乐一番 · 11-13 18:42 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 311万</i><i>播放 426万</i><i>转发率 113.4%</i><i>爆 1.4x</i><i>35秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 35 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707604675268267307" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>这玩意肯定很智能，其次快给我关掉啊喂！</div>
+  <div class=l2>乔好玩 · 11-13 20:05 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 74万</i><i>播放 373万</i><i>转发率 35.6%</i><i>爆 5.1x</i><i>51秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 51 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707626023172574500" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>今日美国沉船</div>
+  <div class=l2>LA小牛 · 11-14 12:03 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 427万</i><i>转发率 203.8%</i><i>爆 133.4x</i><i>119秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707872922833273769" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>美国新奥尔良港，密西西比河上，Atlantic Asphalt 沥青货轮撞上正在靠泊下客的内河游轮，游轮发生倾覆，现场紧急展开大规模救援，万幸最后全部人员幸存……版本过低，升级后可展示全部信息</div>
+  <div class=l2>世界船舶航运 · 11-14 07:48 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 537万</i><i>转发率 337.3%</i><i>爆 179.4x</i><i>120秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需特定场景/外出（标题含“现场”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707807298806502051" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>苹果2000私人定制款怎么用啊😂</div>
+  <div class=l2>毛姐精神 · 11-13 22:15 发布 · 平台垂类标签：科技</div>
+  <div class=l3"><i>粉丝 3737</i><i>播放 151万</i><i>转发率 1243.0%</i><i>爆 403.5x</i><i>10秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 10 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707659400513417893" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="游戏"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 41 条（标签 36 / 关键词补 5），达标 11 条</small></h3><div class=card>
+  <div class=l1>!?绝活盾?!</div>
+  <div class=l2>东雪莲 · 11-14 04:21 发布 · 平台垂类标签：特效&amp;小游戏</div>
+  <div class=l3"><i>粉丝 1266</i><i>播放 406万</i><i>转发率 58.3%</i><i>爆 3210.7x</i><i>14秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 14 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707753739138855679" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>哈夫♻跑刀账耗捆绑包AW</div>
+  <div class=l2>ㅤㅤㅤㅤㅤ · 11-14 02:41 发布 · 平台垂类标签：特效&amp;小游戏</div>
+  <div class=l3"><i>粉丝 1232</i><i>播放 392万</i><i>转发率 48.2%</i><i>爆 3179.6x</i><i>8秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 8 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707727953237555899" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>能碰到这种我这辈子有了。</div>
+  <div class=l2>鱼香螺丝🔩 · 11-14 00:08 发布 · 平台垂类标签：游戏</div>
+  <div class=l3"><i>粉丝 1436</i><i>播放 367万</i><i>转发率 86.2%</i><i>爆 2556.1x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；录屏 + 单人解说即可</span></div>
+  <a class=go href="https://www.douyin.com/video/7707688630266306683" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 34 条</small></h3><div class=card>
+  <div class=l1>听说这歌最近很火</div>
+  <div class=l2>cxy0714 · 11-14 03:09 发布 · 平台垂类标签：游戏</div>
+  <div class=l3"><i>粉丝 176万</i><i>播放 729万</i><i>转发率 拿不到</i><i>爆 4.1x</i><i>17秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；录屏 + 单人解说即可；注意：只有话题标签没有文案，实际内容需点开确认；时长 17 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707735229254978826" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>好像…开了</div>
+  <div class=l2>冲杯咖啡 · 11-14 14:47 发布 · 平台垂类标签：特效&amp;小游戏</div>
+  <div class=l3"><i>粉丝 191万</i><i>播放 571万</i><i>转发率 38.9%</i><i>爆 3.0x</i><i>19秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 19 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707915056838771392" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>当5位主播对战上5位VCTCN职业！</div>
+  <div class=l2>小宇（无畏契约） · 11-14 17:06 发布 · 平台垂类标签：游戏</div>
+  <div class=l3"><i>粉丝 58万</i><i>播放 436万</i><i>转发率 22.7%</i><i>爆 7.5x</i><i>2126秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 2126 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；录屏 + 单人解说即可</span></div>
+  <a class=go href="https://www.douyin.com/video/7707919374761413914" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>雾尽，刃出。</div>
+  <div class=l2>无畏契约 · 11-14 21:00 发布 · 平台垂类标签：游戏</div>
+  <div class=l3"><i>粉丝 480万</i><i>播放 348万</i><i>转发率 拿不到</i><i>爆 0.7x</i><i>16秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；录屏 + 单人解说即可；时长 16 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707679950530252032" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>队友你简直是胡闹！</div>
+  <div class=l2>抱抱 · 11-14 16:30 发布 · 平台垂类标签：特效&amp;小游戏</div>
+  <div class=l3"><i>粉丝 7万</i><i>播放 146万</i><i>转发率 92.2%</i><i>爆 20.3x</i><i>13秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 13 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707941582309408104" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>子不教，父之过</div>
+  <div class=l2>鲁班十号 · 11-14 16:01 发布 · 平台垂类标签：特效&amp;小游戏</div>
+  <div class=l3"><i>粉丝 1万</i><i>播放 140万</i><i>转发率 173.7%</i><i>爆 123.8x</i><i>8秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 8 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707934272962715315" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="体育"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 15 条（标签 14 / 关键词补 1），达标 6 条</small></h3><div class=card>
+  <div class=l1>早八 能行</div>
+  <div class=l2>ZXF · 11-11 13:16 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 2649</i><i>播放 1043万</i><i>转发率 97.6%</i><i>爆 3937.3x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7706778490470018899" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>出片如呼吸一样简单～</div>
+  <div class=l2>我有. · 11-10 22:46 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 1442</i><i>播放 564万</i><i>转发率 89.4%</i><i>爆 3908.1x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7706554368347309797" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #走哪儿跳哪儿）</div>
+  <div class=l2>君君10381 · 11-11 16:26 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 1717</i><i>播放 346万</i><i>转发率 269.3%</i><i>爆 2014.8x</i><i>21秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 21 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706827361936837241" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 15 条</small></h3><div class=card>
+  <div class=l1>沉浸式体验极限洞穴挑战，看完不要去模仿哦。</div>
+  <div class=l2>红牛极限运动 · 11-13 17:18 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 95万</i><i>播放 249万</i><i>转发率 235.2%</i><i>爆 2.6x</i><i>150秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7707582940885512187" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>也是下过大八阶了 朋友说一秒都不用剪</div>
+  <div class=l2>某芸xx · 11-09 10:44 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 13万</i><i>播放 564万</i><i>转发率 132.7%</i><i>爆 43.9x</i><i>8秒</i><i>备选 · 粉丝 13万，未达 50万</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 8 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7705997192734328805" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>严苛的训练几乎要了我的命 失败 羞辱 恨意 欺骗 欲望</div>
+  <div class=l2>執念 · 11-14 09:00 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 370</i><i>播放 136万</i><i>转发率 193.6%</i><i>爆 3675.8x</i><i>9秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需特定场景/外出（标题含“地铁”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707825771834410353" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>美神下凡</div>
+  <div class=l2>乐乐乳猪778 · 11-14 01:39 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 423</i><i>播放 404万</i><i>转发率 62.4%</i><i>爆 9549.4x</i><i>8秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 8 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707712001615809019" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>同城单打来</div>
+  <div class=l2>AA-专业火龙果去子小林33 · 11-13 23:34 发布 · 平台垂类标签：体育</div>
+  <div class=l3"><i>粉丝 276</i><i>播放 58万</i><i>转发率 331.6%</i><i>爆 2115.3x</i><i>7秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 7 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707680001487773055" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="娱乐"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 149 条（标签 145 / 关键词补 4），达标 36 条</small></h3><div class=card>
+  <div class=l1>一起擦粉吧！</div>
+  <div class=l2>想要一束光 · 11-13 21:46 发布 · 平台垂类标签：舞蹈</div>
+  <div class=l3"><i>粉丝 1432</i><i>播放 495万</i><i>转发率 56.6%</i><i>爆 3458.1x</i><i>10秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 10 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707652134979808064" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>不要小看我们的羁绊！</div>
+  <div class=l2>锦福小剧场 · 11-05 19:20 发布 · 平台垂类标签：电视剧</div>
+  <div class=l3"><i>粉丝 1417</i><i>播放 486万</i><i>转发率 拿不到</i><i>爆 3431.5x</i><i>41秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「电视剧」，内容本身是影视综/明星素材，需授权；需 AI/数字人工具（标题含“AI”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7704645850895777531" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>哥 咱下次跑慢点</div>
+  <div class=l2>yeon欣 · 11-08 23:06 发布 · 平台垂类标签：音乐</div>
+  <div class=l3"><i>粉丝 1029</i><i>播放 350万</i><i>转发率 46.1%</i><i>爆 3399.3x</i><i>6秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 6 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7705817264075772906" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 140 条</small></h3><div class=card>
+  <div class=l1>赵老师《慌啥子嘛》录音棚版花絮一则，希望大家都开开心心，遇事别慌，日子慢慢来</div>
+  <div class=l2>刘老根传媒 · 11-14 11:00 发布 · 平台垂类标签：音乐</div>
+  <div class=l3"><i>粉丝 421万</i><i>播放 9989万</i><i>转发率 19.2%</i><i>爆 23.7x</i><i>30秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需专业设备/后期（标题含“录音棚”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707723844705946880" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>很好吃，真的不辣！</div>
+  <div class=l2>吴彦祖 · 11-13 17:50 发布 · 平台垂类标签：明星</div>
+  <div class=l3"><i>粉丝 1225万</i><i>播放 4342万</i><i>转发率 31.6%</i><i>爆 3.5x</i><i>253秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「明星」，内容本身是影视综/明星素材，需授权</span></div>
+  <a class=go href="https://www.douyin.com/video/7707591366573927055" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>可恶，被预判了</div>
+  <div class=l2>罗小龙 · 11-13 18:09 发布 · 平台垂类标签：剧情</div>
+  <div class=l3"><i>粉丝 230万</i><i>播放 1462万</i><i>转发率 104.1%</i><i>爆 6.4x</i><i>14秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「剧情」，内容本身是影视综/明星素材，需授权</span></div>
+  <a class=go href="https://www.douyin.com/video/7707596263415987304" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>晚安 晚安大家</div>
+  <div class=l2>赵露思 · 11-14 20:51 发布 · 平台垂类标签：明星</div>
+  <div class=l3"><i>粉丝 5016万</i><i>播放 521万</i><i>转发率 8.2%</i><i>爆 0.1x</i><i>10秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「明星」，内容本身是影视综/明星素材，需授权</span></div>
+  <a class=go href="https://www.douyin.com/video/7708008982631796096" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>观众在这段感情里付出得不比本人少啊！！</div>
+  <div class=l2>我系山竹大王 · 11-14 18:39 发布 · 平台垂类标签：明星</div>
+  <div class=l3"><i>粉丝 98万</i><i>播放 588万</i><i>转发率 拿不到</i><i>爆 6.0x</i><i>75秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「明星」，内容本身是影视综/明星素材，需授权</span></div>
+  <a class=go href="https://www.douyin.com/video/7707974978737605939" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #deadman）</div>
+  <div class=l2>蔡徐坤 · 11-14 18:35 发布 · 平台垂类标签：明星</div>
+  <div class=l3"><i>粉丝 3007万</i><i>播放 412万</i><i>转发率 13.4%</i><i>爆 0.1x</i><i>15秒</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>垂类为「明星」，内容本身是影视综/明星素材，需授权</span></div>
+  <a class=go href="https://www.douyin.com/video/7707973808224849050" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="知识"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 92 条（标签 90 / 关键词补 2），达标 7 条</small></h3><div class=card>
+  <div class=l1>给想象松绑 让童心落笔</div>
+  <div class=l2>教美术的帆帆老师 · 11-13 20:12 发布 · 平台垂类标签：艺术</div>
+  <div class=l3"><i>粉丝 6656</i><i>播放 2963万</i><i>转发率 22.1%</i><i>爆 4452.3x</i><i>36秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 36 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707627847741266405" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #寻找城市里的巨型玩具）</div>
+  <div class=l2>爱睡觉的孩子 · 10-19 22:16 发布 · 平台垂类标签：艺术</div>
+  <div class=l3"><i>粉丝 1132</i><i>播放 172万</i><i>转发率 31.8%</i><i>爆 1522.9x</i><i>16秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需专业设备/后期（标题含“灯光”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7698382735282916005" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>鲸鱼的声音为什么传得很远？</div>
+  <div class=l2>牛顿顿顿顿牛 · 10-31 22:19 发布 · 平台垂类标签：科普</div>
+  <div class=l3"><i>粉丝 1285</i><i>播放 191万</i><i>转发率 489.2%</i><i>爆 1486.8x</i><i>22秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜口播；时长 22 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7702836327754509426" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 94 条</small></h3><div class=card>
+  <div class=l1>大美发文与高迪走离婚流程此前曝出轨被否认</div>
+  <div class=l2>马俊哲律师 · 11-12 20:43 发布 · 平台垂类标签：法律</div>
+  <div class=l3"><i>粉丝 492万</i><i>播放 2654万</i><i>转发率 182.8%</i><i>爆 5.4x</i><i>143秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707264605994683689" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>有些“人”，画着画着，就“舞”起来了。</div>
+  <div class=l2>抖音 · 11-13 18:00 发布 · 平台垂类标签：艺术</div>
+  <div class=l3"><i>粉丝 2518万</i><i>播放 2086万</i><i>转发率 拿不到</i><i>爆 0.8x</i><i>58秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 58 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707521348549119272" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>慢点慢点，学不会了！沉浸式体验省级非遗蹬桌子！</div>
+  <div class=l2>新华社 · 11-11 17:00 发布 · 平台垂类标签：文化</div>
+  <div class=l3"><i>粉丝 8921万</i><i>播放 934万</i><i>转发率 19.7%</i><i>爆 0.1x</i><i>29秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 29 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706836276749585700" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>一环扣一环：远处的风，先吹到运费和菜价</div>
+  <div class=l2>神话研究所 · 11-14 18:21 发布 · 平台垂类标签：科普</div>
+  <div class=l3"><i>粉丝 105万</i><i>播放 655万</i><i>转发率 162.8%</i><i>爆 6.3x</i><i>219秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 219 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜口播</span></div>
+  <a class=go href="https://www.douyin.com/video/7707970380899568915" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>今天在街上碰到一位不会说话的画家，就坐在路边安安静静画画。我停下来看了一会儿，画得挺用心的。我给了一点心意，不是可怜他，就是觉得他靠自己手艺吃饭，值得认可。他不吵不闹，也不会刻意卖……版本过低，升级后可展示全部信息</div>
+  <div class=l2>神厨小福权 · 11-14 18:07 发布 · 平台垂类标签：艺术</div>
+  <div class=l3"><i>粉丝 2万</i><i>播放 903万</i><i>转发率 17.8%</i><i>爆 392.8x</i><i>14秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 14 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707966650616639153" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>“写诗才华放大一万倍，李白地位不变” （李白配音: ）</div>
+  <div class=l2>观云 · 11-14 16:42 发布 · 平台垂类标签：人文社科</div>
+  <div class=l3"><i>粉丝 2万</i><i>播放 302万</i><i>转发率 12.3%</i><i>爆 157.8x</i><i>44秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人读书/讲史；时长 44 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707944897600549348" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="母婴"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 42 条（标签 36 / 关键词补 6），达标 20 条</small></h3><div class=card>
+  <div class=l1>（只有话题 #随手拍的live）</div>
+  <div class=l2>苗 · 11-13 15:10 发布 · 平台垂类标签：亲子</div>
+  <div class=l3"><i>粉丝 3136</i><i>播放 2186万</i><i>转发率 329.6%</i><i>爆 6972.0x</i><i>4秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“宝宝/娃”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707550125098892145" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>番茄酱梅开二度</div>
+  <div class=l2>吴百万♂2024 · 11-13 22:14 发布 · 平台垂类标签：亲子</div>
+  <div class=l3"><i>粉丝 1862</i><i>播放 1121万</i><i>转发率 605.5%</i><i>爆 6018.4x</i><i>12秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 12 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707659258871476879" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>开车吃过期食品害人</div>
+  <div class=l2>周大少 · 11-13 20:10 发布 · 平台垂类标签：亲子</div>
+  <div class=l3"><i>粉丝 2513</i><i>播放 1411万</i><i>转发率 200.0%</i><i>爆 5616.6x</i><i>39秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 39 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707627207817312922" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 35 条</small></h3><div class=card>
+  <div class=l1>上一秒还在喝茶，下一秒就能生娃</div>
+  <div class=l2>陶冶一家（准爸爸）版 · 11-13 18:49 发布 · 平台垂类标签：母婴</div>
+  <div class=l3"><i>粉丝 129万</i><i>播放 369万</i><i>转发率 123.6%</i><i>爆 2.9x</i><i>38秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“娃”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707606396972652473" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>校园跑这一块还得是电动扭扭车</div>
+  <div class=l2>杰瑞 · 11-14 05:01 发布 · 平台垂类标签：亲子</div>
+  <div class=l3"><i>粉丝 12万</i><i>播放 1534万</i><i>转发率 53.0%</i><i>爆 128.0x</i><i>30秒</i><i>备选 · 粉丝 12万，未达 50万</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 30 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707764192414138067" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>买菜路上，看到一只猴子在骑摩托。</div>
+  <div class=l2>狮子不会漂移 · 11-10 18:29 发布 · 平台垂类标签：亲子</div>
+  <div class=l3"><i>粉丝 12万</i><i>播放 806万</i><i>转发率 84.6%</i><i>爆 66.1x</i><i>10秒</i><i>备选 · 粉丝 12万，未达 50万</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 10 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706487948195503334" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>（无文案）</div>
+  <div class=l2>手指太长被砍了 · 11-14 16:28 发布 · 平台垂类标签：母婴</div>
+  <div class=l3"><i>粉丝 612</i><i>播放 43万</i><i>转发率 217.4%</i><i>爆 704.6x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707941250222357477" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>被洗脑了，脑子里全是这个歌</div>
+  <div class=l2>安安. · 11-14 12:10 发布 · 平台垂类标签：母婴</div>
+  <div class=l3"><i>粉丝 1万</i><i>播放 96万</i><i>转发率 184.4%</i><i>爆 77.0x</i><i>21秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 21 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707874660024703163" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>k-pop噜《nobody》</div>
+  <div class=l2>YY🎶 · 11-14 12:00 发布 · 平台垂类标签：母婴</div>
+  <div class=l3"><i>粉丝 3598</i><i>播放 36万</i><i>转发率 191.1%</i><i>爆 99.4x</i><i>29秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需 AI/数字人工具（标题含“AI”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707487259272663656" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="宠物"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 26 条（标签 18 / 关键词补 8），达标 20 条</small></h3><div class=card>
+  <div class=l1>严苛的训练几乎要了我的命 失败 羞辱 恨意 欺骗欲望 这些黑色生命力才是真正的动力源泉</div>
+  <div class=l2>可爱大宝橘 · 11-13 23:32 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 4631</i><i>播放 1661万</i><i>转发率 35.0%</i><i>爆 3585.8x</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“猫”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707679495738337472" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（无文案）</div>
+  <div class=l2>小铁骑 · 11-11 14:59 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 1755</i><i>播放 504万</i><i>转发率 768.0%</i><i>爆 2871.2x</i><i>20秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 20 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706805034718320569" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #橘猫臭臭）</div>
+  <div class=l2>我不是薯条！（有教程） · 11-14 14:22 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 2717</i><i>播放 745万</i><i>转发率 55.2%</i><i>爆 2742.6x</i><i>7秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“猫”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707908689990267365" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 19 条</small></h3><div class=card>
+  <div class=l1>五秒一个腿</div>
+  <div class=l2>咪齐喵喵屋 · 11-13 17:49 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 13万</i><i>播放 1807万</i><i>转发率 112.4%</i><i>爆 141.9x</i><i>13秒</i><i>备选 · 粉丝 13万，未达 50万</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“猫”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707591047295851193" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>？</div>
+  <div class=l2>悲伤鸡肉卷 · 11-14 17:38 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 1万</i><i>播放 895万</i><i>转发率 181.2%</i><i>爆 679.8x</i><i>10秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需特定场景/外出（标题含“工厂”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707959267022832889" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>下雨天对本小狗一点也不好 没雨衣，四驱也不防滑 还要被嘲笑</div>
+  <div class=l2>麦安安耶 · 11-14 14:29 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 1212</i><i>播放 388万</i><i>转发率 136.3%</i><i>爆 3199.6x</i><i>7秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“狗”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707910565100717194" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>还是没想明白他是怎么卡住的……</div>
+  <div class=l2>YJ金鱼 · 11-14 13:07 发布 · 平台垂类标签：动物</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 4123万</i><i>转发率 170.3%</i><i>爆 1283.1x</i><i>20秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 20 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707889487947644904" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="美食"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 22 条（标签 17 / 关键词补 5），达标 12 条</small></h3><div class=card>
+  <div class=l1>蜜雪你牛大了！</div>
+  <div class=l2>我就爱吃 · 11-08 10:54 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 2558</i><i>播放 1122万</i><i>转发率 119.2%</i><i>爆 4386.1x</i><i>12秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 12 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7705628649462080497" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>所以，你到底在躲什么？</div>
+  <div class=l2>穷小子不恋富家女 · 11-13 18:19 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 2010</i><i>播放 503万</i><i>转发率 48.7%</i><i>爆 2501.7x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7707598811195952229" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>全民进入纯过日子时代</div>
+  <div class=l2>睡觉的时候不困 · 11-10 21:07 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 5261</i><i>播放 1074万</i><i>转发率 259.7%</i><i>爆 2041.2x</i></div>
+  <div class="judge t3"><b>○ 拍不了</b><span>需演员/剧情演绎（标题含“短剧”）；需第二人及以上出镜（标题含“姐妹”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7706528725969436850" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 20 条</small></h3><div class=card>
+  <div class=l1>学做吃播第320天，9斤帝王猪，哈哈哈哈哈</div>
+  <div class=l2>@薛然 · 11-14 10:36 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 332万</i><i>播放 1700万</i><i>转发率 41.2%</i><i>爆 5.1x</i><i>419秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 419 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7707850386736646746" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>东北路边的烤鱼</div>
+  <div class=l2>小豪饿了 · 11-11 13:53 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 60万</i><i>播放 1560万</i><i>转发率 74.8%</i><i>爆 26.0x</i><i>356秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 356 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7706787880312400730" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>我看看谁能一口气念完？</div>
+  <div class=l2>司氏砸缸 · 11-13 10:27 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 1081万</i><i>播放 265万</i><i>转发率 388.1%</i><i>爆 0.2x</i><i>11秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 11 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707476998860444278" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>（无文案）</div>
+  <div class=l2>ㅤㅤㅤ · 11-14 13:17 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 408</i><i>播放 158万</i><i>转发率 393.7%</i><i>爆 3868.8x</i><i>10秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 10 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707891961475379322" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>我的耐心是有限的</div>
+  <div class=l2>安雨纺织厂家 · 11-14 10:13 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 5725</i><i>播放 248万</i><i>转发率 86.1%</i><i>爆 433.7x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707844440610824054" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>广西普通家庭的晚餐，冬天篇 广西的冬天一定要打边炉，经典食材：排骨，鸡肉，豌豆尖，苏园。第一天鸡有鸡味菜有菜味，剩下连着吃的每一天都是大乱炖，吃到怕去。</div>
+  <div class=l2>加味逍遥丸 · 11-14 02:03 发布 · 平台垂类标签：美食</div>
+  <div class=l3"><i>粉丝 345</i><i>播放 363万</i><i>转发率 203.2%</i><i>爆 10526.9x</i><i>15秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 15 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707718238642566523" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="旅游"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 19 条（标签 19 / 关键词补 0），达标 7 条</small></h3><div class=card>
+  <div class=l1>鳌拜你又想蒙我！！！😠</div>
+  <div class=l2>花生什么树了👀 · 11-11 17:35 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 2267</i><i>播放 1203万</i><i>转发率 170.6%</i><i>爆 5304.9x</i><i>7秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 7 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7706845265190068218" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>土豆的黑猫警长手势舞太可爱了～</div>
+  <div class=l2>万岁山明星夜 · 11-14 02:02 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 1963</i><i>播放 687万</i><i>转发率 91.1%</i><i>爆 3497.7x</i><i>18秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需宠物/宝宝出镜（标题含“猫”）</span></div>
+  <a class=go href="https://www.douyin.com/video/7707718096115018570" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>关注必回</div>
+  <div class=l2>杰瑞头号粉丝 · 11-05 21:56 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 1202</i><i>播放 213万</i><i>转发率 47.3%</i><i>爆 1771.0x</i><i>7秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 7 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7704685788482526833" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 16 条</small></h3><div class=card>
+  <div class=l1>反向旅游！挑战成都最差酒店！餐厅！景点！我差点没挺过去！</div>
+  <div class=l2>林恩环球记 · 11-14 16:00 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 23万</i><i>播放 431万</i><i>转发率 144.8%</i><i>爆 19.0x</i><i>623秒</i><i>备选 · 粉丝 23万，未达 50万</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需特定场景/外出（标题含“酒店”）；需大量素材/剪辑（标题含“100个”）；成片 623 秒，单人需备稿+较多剪辑</span></div>
+  <a class=go href="https://www.douyin.com/video/7707610440045579529" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>“生与死一切成空.”</div>
+  <div class=l2>𝑷.𝑩𝒓𝒆𝒂𝒌 · 11-14 12:00 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 2万</i><i>播放 430万</i><i>转发率 35.0%</i><i>爆 256.6x</i><i>15秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 15 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707872016950381874" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>人类为何如此痴迷大海🌊</div>
+  <div class=l2>TiTi · 11-13 22:11 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 278</i><i>播放 123万</i><i>转发率 35.9%</i><i>爆 4430.8x</i><i>14秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 14 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707658468190557797" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>你这辈子最不后悔和谁做朋友.</div>
+  <div class=l2>𝘿𝙚𝙫𝙖𝙣𝙩 · 11-13 21:38 发布 · 平台垂类标签：旅行</div>
+  <div class=l3"><i>粉丝 5591</i><i>播放 208万</i><i>转发率 59.5%</i><i>爆 372.7x</i><i>13秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 13 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707650034276552697" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="教育"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 24 条（标签 19 / 关键词补 5），达标 9 条</small></h3><div class=card>
+  <div class=l1>我的位置很神秘😏晚自习看电视耍起</div>
+  <div class=l2>凌晨五点喂鸡捡到周杰伦演唱会门票狂丢鸡屎 · 11-13 19:58 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 1614</i><i>播放 682万</i><i>转发率 32.9%</i><i>爆 4225.4x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验</span></div>
+  <a class=go href="https://www.douyin.com/video/7707624209643806195" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #校园运动会#接力）</div>
+  <div class=l2>不帅还很坏. · 11-13 09:33 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 2294</i><i>播放 725万</i><i>转发率 90.6%</i><i>爆 3159.2x</i><i>9秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认；时长 9 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707463155849871281" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>学校你别逗我</div>
+  <div class=l2>药片 · 11-13 16:10 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 1051</i><i>播放 282万</i><i>转发率 61.7%</i><i>爆 2681.3x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707565426771609743" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 17 条</small></h3><div class=card>
+  <div class=l1>转了两下给自己转笑了</div>
+  <div class=l2>小满聊科技 · 11-13 18:25 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 153万</i><i>播放 835万</i><i>转发率 63.2%</i><i>爆 5.4x</i><i>31秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认；时长 31 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707600205235801243" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>阿数你怎么变得如此陌生</div>
+  <div class=l2>剧说娱综 · 11-14 10:00 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 62万</i><i>播放 296万</i><i>转发率 204.7%</i><i>爆 4.8x</i><i>45秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认；时长 45 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707716213861895465" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>我与数学恨海情天不共戴天！</div>
+  <div class=l2>快乐的小太阳 · 11-13 10:42 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 23万</i><i>播放 235万</i><i>转发率 154.8%</i><i>爆 10.4x</i><i>36秒</i><i>备选 · 粉丝 23万，未达 50万</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；时长 36 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707481013697383715" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>新宿决战</div>
+  <div class=l2>莺請 · 11-14 17:09 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 1791</i><i>播放 74万</i><i>转发率 116.2%</i><i>爆 415.8x</i><i>320秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 320 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707951803156970467" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>“难道你的生命不会呐喊吗?”</div>
+  <div class=l2>还得练 · 11-14 14:07 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 319</i><i>播放 360万</i><i>转发率 191.7%</i><i>爆 11274.0x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验</span></div>
+  <a class=go href="https://www.douyin.com/video/7707904850080250545" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>大学课程</div>
+  <div class=l2>谷子吖 · 11-14 12:00 发布 · 平台垂类标签：教育校园</div>
+  <div class=l3"><i>粉丝 9万</i><i>播放 487万</i><i>转发率 53.5%</i><i>爆 56.5x</i><i>6秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲题/经验；注意：只有话题标签没有文案，实际内容需点开确认；时长 6 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707872128402325193" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="财经"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 15 条（标签 15 / 关键词补 0），达标 0 条</small></h3><div class=card>
+  <div class=l1>1.65 KG铜值多少？</div>
+  <div class=l2>咸阳市物资回收公司第三经营部 · 11-13 10:00 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 6818</i><i>播放 296万</i><i>转发率 32.9%</i><i>爆 434.6x</i><i>22秒</i><i>备选 · 倍数 435x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；时长 22 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707280130976075018" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>山东人的童年硬通货！钙奶饼干，为什么走不出山东？</div>
+  <div class=l2>财经俏掌柜 · 11-11 17:13 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 1万</i><i>播放 302万</i><i>转发率 46.9%</i><i>爆 293.6x</i><i>225秒</i><i>备选 · 倍数 294x 未达 1000</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 225 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点</span></div>
+  <a class=go href="https://www.douyin.com/video/7706839398339333439" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>马老师的巅峰时刻！</div>
+  <div class=l2>大达老张 · 11-04 11:45 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 2480</i><i>播放 72万</i><i>转发率 19.2%</i><i>爆 291.1x</i><i>59秒</i><i>备选 · 倍数 291x 未达 1000</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；时长 59 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7704157370864037625" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 13 条</small></h3><div class=card>
+  <div class=l1>牛逼呀</div>
+  <div class=l2>河马吸吸 · 11-14 17:29 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 225万</i><i>播放 587万</i><i>转发率 55.2%</i><i>爆 2.6x</i><i>19秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；注意：只有话题标签没有文案，实际内容需点开确认；时长 19 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707957031638461617" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #红鼻小丑）</div>
+  <div class=l2>红鼻小丑 · 11-14 16:01 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 166万</i><i>播放 239万</i><i>转发率 12.2%</i><i>爆 1.4x</i><i>45秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；注意：只有话题标签没有文案，实际内容需点开确认；时长 45 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707934327024496889" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>当你有个懂金融的老爸(137期)日本经济下行谁来买单</div>
+  <div class=l2>方师傅 · 11-12 21:00 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 77万</i><i>播放 122万</i><i>转发率 60.3%</i><i>爆 1.6x</i><i>202秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 202 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点</span></div>
+  <a class=go href="https://www.douyin.com/video/7707234425439915314" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>对抗路闺蜜：准备打包上《后会友期》吧 在杭州滨江人均1900就能住超大的两房！！！震惊！！</div>
+  <div class=l2>阮妹（到处流浪版） · 11-14 17:42 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 3万</i><i>播放 50万</i><i>转发率 61.5%</i><i>爆 16.2x</i><i>338秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需第二人及以上出镜（标题含“闺蜜”）；成片 338 秒，单人需备稿+较多剪辑</span></div>
+  <a class=go href="https://www.douyin.com/video/7707960261034071467" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>经济周期六个规律，藏着普通人的机会</div>
+  <div class=l2>AIGC-知衍 · 11-14 17:33 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 11万</i><i>播放 254万</i><i>转发率 38.9%</i><i>爆 22.6x</i><i>23秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；时长 23 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707957915508482175" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #民营加油站）</div>
+  <div class=l2>季广洲 · 11-14 15:07 发布 · 平台垂类标签：财经</div>
+  <div class=l3"><i>粉丝 4万</i><i>播放 207万</i><i>转发率 3.9%</i><i>爆 54.9x</i><i>32秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人讲观点；注意：只有话题标签没有文案，实际内容需点开确认；时长 32 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707870221201810106" target=_blank rel=noopener>看原视频 →</a>
+</div></section><section class=track data-t="其他"><h3>低粉爆款 <small>播放/粉丝 &gt; 1000 · 该赛道候选 75 条（标签 17 / 关键词补 58），达标 58 条</small></h3><div class=card>
+  <div class=l1>万事 尽其心尽其力 而后 顺其自然</div>
+  <div class=l2>也许 · 11-12 14:31 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 1247</i><i>播放 801万</i><i>转发率 294.2%</i><i>爆 6420.2x</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707168763707743141" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>番茄酱梅开二度</div>
+  <div class=l2>吴百万♂2024 · 11-13 22:14 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 1862</i><i>播放 1121万</i><i>转发率 605.5%</i><i>爆 6018.4x</i><i>12秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 12 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707659258871476879" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #中华恐龙园#会玩还是中华恐龙园）</div>
+  <div class=l2>沐杨小奇奇 · 11-12 06:43 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 2765</i><i>播放 1512万</i><i>转发率 123.5%</i><i>爆 5468.1x</i><i>26秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 26 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707048304756519123" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>高粉爆款 <small>粉丝 ≥ 50万 · 按绝对播放排，不看倍数 · 本次该赛道视频榜 23 条</small></h3><div class=card>
+  <div class=l1>一支笔的重量能有多重？探访泉州安溪车库里的“姐妹识字班”</div>
+  <div class=l2>第一帮帮团 · 11-11 17:09 发布 · 平台垂类标签：公益</div>
+  <div class=l3"><i>粉丝 412万</i><i>播放 369万</i><i>转发率 21.3%</i><i>爆 0.9x</i><i>322秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>需第二人及以上出镜（标题含“姐妹”）；成片 322 秒，单人需备稿+较多剪辑</span></div>
+  <a class=go href="https://www.douyin.com/video/7706838457527602451" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>聚力万车寻亲，共愿天下无拐！多一辆车，就多一份线索，多一份团圆的可能。</div>
+  <div class=l2>阿鱼在拍车📷 · 11-11 20:58 发布 · 平台垂类标签：公益</div>
+  <div class=l3"><i>粉丝 55万</i><i>播放 110万</i><i>转发率 2.4%</i><i>爆 2.0x</i><i>571秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 571 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7706897425017647481" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>人工耳蜗里的声音，到底是什么样的？</div>
+  <div class=l2>亿点点不一样 · 10-23 17:00 发布 · 平台垂类标签：公益</div>
+  <div class=l3"><i>粉丝 956万</i><i>播放 60万</i><i>转发率 11.5%</i><i>爆 0.1x</i><i>383秒</i></div>
+  <div class="judge t2"><b>◐ 要条件</b><span>成片 383 秒，单人需备稿+较多剪辑。标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成</span></div>
+  <a class=go href="https://www.douyin.com/video/7699752982170111274" target=_blank rel=noopener>看原视频 →</a>
+</div><h3>上升最快 <small>本次榜单发布最新的 3 条 · 平台无作品级飙升数据</small></h3><div class=card>
+  <div class=l1>雾尽，刃出。</div>
+  <div class=l2>无畏契约 · 11-14 21:00 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 480万</i><i>播放 348万</i><i>转发率 拿不到</i><i>爆 0.7x</i><i>16秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；时长 16 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707679950530252032" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>这期真神了</div>
+  <div class=l2>陈嘉伦（整个路人） · 11-14 18:23 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 676万</i><i>播放 585万</i><i>转发率 616.6%</i><i>爆 0.9x</i><i>143秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认</span></div>
+  <a class=go href="https://www.douyin.com/video/7707970886430641615" target=_blank rel=noopener>看原视频 →</a>
+</div><div class=card>
+  <div class=l1>（只有话题 #粉丝合影）</div>
+  <div class=l2>跳投哥葱油饼 · 11-14 16:02 发布 · 关键词归类（无命中词）</div>
+  <div class=l3"><i>粉丝 314万</i><i>播放 1037万</i><i>转发率 210.1%</i><i>爆 3.3x</i><i>6秒</i></div>
+  <div class="judge t1"><b>● 一个人能拍</b><span>标题与标签里没有多人、特定场景、专业设备、明星素材信号；单人出镜/单机位可完成；注意：只有话题标签没有文案，实际内容需点开确认；时长 6 秒，适合单机位一条过</span></div>
+  <a class=go href="https://www.douyin.com/video/7707934605319960009" target=_blank rel=noopener>看原视频 →</a>
+</div></section>
+<details class=rules><summary>规则与口径（点开看）</summary>
+<p><b>赛道怎么分</b>：用抖音榜单原生「垂类标签」逐类取榜（38 个一级垂类），再映射到 16 个赛道，不靠标题关键词猜。按垂类过滤后每类只有 20 条，极端条目可能不在采样里，所以另抓全站榜兜底，兜底条目用关键词词典归类，卡片上标「关键词归类」，不冒充平台标签。</p>
+<table><tr><th>平台垂类</th><th>赛道</th></tr><tr><td>美食</td><td>美食</td></tr><tr><td>旅行</td><td>旅游</td></tr><tr><td>休闲娱乐</td><td>生活</td></tr><tr><td>文化</td><td>知识</td></tr><tr><td>舞蹈</td><td>娱乐</td></tr><tr><td>教育校园</td><td>教育</td></tr><tr><td>公益</td><td>其他</td></tr><tr><td>艺术</td><td>知识</td></tr><tr><td>时尚</td><td>生活</td></tr><tr><td>二次元</td><td>娱乐</td></tr><tr><td>汽车</td><td>生活</td></tr><tr><td>三农</td><td>生活</td></tr><tr><td>电视剧</td><td>娱乐</td></tr><tr><td>电影</td><td>娱乐</td></tr><tr><td>科技</td><td>科技</td></tr><tr><td>体育</td><td>体育</td></tr><tr><td>动物</td><td>宠物</td></tr><tr><td>音乐</td><td>娱乐</td></tr><tr><td>医疗健康</td><td>健康</td></tr><tr><td>颜值</td><td>生活</td></tr><tr><td>生活家居</td><td>生活</td></tr><tr><td>摄影摄像</td><td>生活</td></tr><tr><td>随拍</td><td>生活</td></tr><tr><td>明星</td><td>娱乐</td></tr><tr><td>情感</td><td>情感</td></tr><tr><td>人文社科</td><td>知识</td></tr><tr><td>财经</td><td>财经</td></tr><tr><td>科普</td><td>知识</td></tr><tr><td>职场</td><td>职场</td></tr><tr><td>生活记录</td><td>生活</td></tr><tr><td>综艺</td><td>娱乐</td></tr><tr><td>母婴</td><td>母婴</td></tr><tr><td>亲子</td><td>母婴</td></tr><tr><td>特效&amp;小游戏</td><td>游戏</td></tr><tr><td>剧情</td><td>娱乐</td></tr><tr><td>法律</td><td>知识</td></tr><tr><td>AI原生影像</td><td>科技</td></tr><tr><td>游戏</td><td>游戏</td></tr></table>
+<p><b>低粉爆款</b>：播放 ÷ 粉丝 &gt; 1000，按倍数从高到低取 3 条。<b>高粉爆款</b>：粉丝 ≥ 50 万，按绝对播放取 3 条，不看倍数。达不到 3 条时用同赛道次优补位，卡片上写「备选」并注明差在哪（倍数没到 1000 / 粉丝没到 50 万），不把备选当达标。<b>上升最快</b>：平台不提供作品级飙升数据（拿不到），改用「本次榜单发布最新」的 3 条代替，另附官方上升热点榜的话题（有真实上升位次）。转发率 = 分享数 ÷ 点赞数，来自作品详情接口；详情没返回就写「拿不到」。</p>
+<p><b>可拍性三档</b>：拍不了 = 命中「需明星/影视素材」「需演员/剧情演绎」「需专业资质/机构场景」；要条件 = 命中「需第二人及以上出镜」「需特定场景/外出」「需专业设备/后期」「需才艺/手工展示」「需宠物/宝宝出镜」「需 AI/数字人工具」「需大量素材/剪辑」；其余 = 一个人能拍。依据只有垂类标签、标题与话题文本、时长，页面逐条列出命中的词；这是文本规则判断，不等于实拍难度定论。</p>
+<p>页面只做内容机制与可拍性判断，不选品、不绑品类。今日调用 85 次（TikHub 单次 $0.001）。</p>
+<p>⚠ 本轮有 1 个垂类榜返回空，已按「拿不到」处理，未做任何估算：上升热点榜返回空（话题级飙升数据本次拿不到）</p>
+</details>
+<footer>数据：TikHub 抖音热点宝榜单（低粉爆款榜 / 视频总榜 / 上升热点榜 / 垂类标签）<br>
+页面由 <code>tools/tracks.py</code> 生成 · <a href="index.html">← 低粉爆款雷达</a> · <a href="legacy.html">旧版情报看板</a></footer>
+</div>
+<script>
+var btns=document.querySelectorAll('nav.tabs button'),secs=document.querySelectorAll('section.track');
+function show(t){btns.forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
+ secs.forEach(function(s){s.classList.toggle('on',s.dataset.t===t)});}
+btns.forEach(function(b){b.addEventListener('click',function(){show(b.dataset.t)})});
+show("科技");
+</script>
+</body></html>
